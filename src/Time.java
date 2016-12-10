@@ -170,10 +170,16 @@ public class Time implements Cloneable , Comparable<Time> {
         int h = hour;
         if (h == 12) h = 0;
         if (isPM) h += 12;
-
         return h * 60 + minute;
     }
 
+    /**
+     * Overrides compareTo method
+     * @param other Time object that is being compared with this object
+     * @return negative value when this object is smaller than other object,
+     *         positive value when this object is greater than other object,
+     *         0 when this object is equal to other object
+     */
     @Override
     public int compareTo(Time other) {
         return toMinute() - other.toMinute();

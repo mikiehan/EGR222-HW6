@@ -8,11 +8,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         CourseInstructorTest.class,
-        CourseTest.class,
         TimeInstructorTest.class,
-        TimeTest.class,
-        WeekdayInstructorTest.class,
-        WeekdayTest.class
+        WeekdayInstructorTest.class
 })
 public class HW6TestSuite {
 }
