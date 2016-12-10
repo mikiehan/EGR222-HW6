@@ -11,16 +11,6 @@ import java.util.*;
  */
 public class ScheduleInstructorTest {
 
-    public Map<String,String> mystery(Map<String,Integer> map1, Map<Integer, String> map2) {
-        Map<String, String> result = new TreeMap<String, String>();
-        for(String s1: map1.keySet()){
-            Integer v = map1.get(s1);
-            if(map2.containsKey(v))
-                result.put(s1, map2.get(v));
-        }
-        return result;
-    }
-
     public static final String[] courseStringsSave = {
             "EGR 111,2,T,11:00 AM,120",
             "EGR 777,2,F,11:00 AM,100",
@@ -54,7 +44,7 @@ public class ScheduleInstructorTest {
     @Test
     public void constructorTest(){
         Schedule s = new Schedule();
-        List<Course> courses = s.getAllCourses();
+        Collection<Course> courses = s.getAllCourses();
         Assert.assertTrue(courses != null);
         Assert.assertEquals(0, courses.size());
     }
@@ -70,7 +60,7 @@ public class ScheduleInstructorTest {
         Course c3 = buildCourseHelper(courseStrings[2]);
 
         Schedule s = buildScheduleHelper(courseStrings);
-        List<Course> courses = s.getAllCourses();
+        Collection<Course> courses = s.getAllCourses();
         Assert.assertEquals(3, courses.size());
         Assert.assertTrue(courses.contains(c1));
         Assert.assertTrue(courses.contains(c2));
@@ -105,42 +95,23 @@ public class ScheduleInstructorTest {
 
     @Test
     public void cloneTest(){
-        Map<String,Integer> map1= new HashMap<>();
-        map1.put("bar", 11);
-        map1.put("baz", 33);
-        map1.put("foo", 55);
+        Schedule s = new Schedule();
+        Course c1 = new Course("EGR 111", 3,
+                CourseInstructorTest.toEnumSet("MWF"),
+                Time.fromString("05:00 PM"), 60);
+        Course c2 = new Course("EGR 222", 3,
+                CourseInstructorTest.toEnumSet("T"),
+                Time.fromString("05:00 PM"), 60);
 
-        Map<Integer,String> map2 = new HashMap<>();
-        map2.put(11, "earth");
-        map2.put(22, "wind");
-        map2.put(33, "air");
-        map2.put(44, "fire");
-        map2.put(55, "water");
+        Schedule clone = s.clone();
+        Assert.assertFalse(s == clone);
+        Course c3 = new Course("EGR 333", 3,
+                CourseInstructorTest.toEnumSet("W"),
+                Time.fromString("04:00 PM"), 20);
+        s.add(c3);
 
-        Map<String, String> result = mystery(map1, map2);
-        for(String s : result.keySet()){
-            System.out.println(s + "," + result.get(s));
-        }
-
-
-
-//        Schedule s = new Schedule();
-//        Course c1 = new Course("EGR 111", 3,
-//                CourseInstructorTest.toEnumSet("MWF"),
-//                Time.fromString("05:00 PM"), 60);
-//        Course c2 = new Course("EGR 222", 3,
-//                CourseInstructorTest.toEnumSet("T"),
-//                Time.fromString("05:00 PM"), 60);
-//
-//        Schedule clone = s.clone();
-//        Assert.assertFalse(s == clone);
-//        Course c3 = new Course("EGR 333", 3,
-//                CourseInstructorTest.toEnumSet("W"),
-//                Time.fromString("04:00 PM"), 20);
-//        s.add(c3);
-//
-//        List<Course> courses = clone.getAllCourses();
-//        Assert.assertFalse(courses.contains(c3));
+        Collection<Course> courses = clone.getAllCourses();
+        Assert.assertFalse(courses.contains(c3));
     }
 
     @Test
@@ -202,7 +173,10 @@ public class ScheduleInstructorTest {
     private void saveTestHelper(String[] courseStrings, String[] expectedSortedResult,
                                 Comparator<Course> c, String filename) throws FileNotFoundException{
         Schedule s = buildScheduleHelper(courseStrings);
-        List<Course> shuffledCourses = s.getAllCourses();
+
+        Collection<Course> courseCollection = s.getAllCourses();
+        List<Course> shuffledCourses = new LinkedList<>();
+        shuffledCourses.addAll(courseCollection);
         Collections.shuffle(shuffledCourses); //shuffle the order randomly
 
         PrintStream fileOutput = new PrintStream(new File(filename));
