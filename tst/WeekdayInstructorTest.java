@@ -1,4 +1,3 @@
-import org.jcp.xml.dsig.internal.MacOutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 

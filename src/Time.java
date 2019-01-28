@@ -1,7 +1,13 @@
 import java.util.Comparator;
 
 /**
- * Created by mhan on 11/8/2016.
+ * This class defines the Time object, which is displayed in HH:MM AM/PM format
+ * and which can be mutated to and from a String object. Time can also be
+ * "shifted" by a given number of minutes, as well as compared to other
+ * Time objects.
+ *
+ * @author Dr. Mikyung Han
+ * @version EGR326 SP19 v2 with Javadoc
  */
 public class Time implements Cloneable , Comparable<Time> {
     private int hour;
@@ -9,10 +15,11 @@ public class Time implements Cloneable , Comparable<Time> {
     private boolean isPM;
 
     /**
-     * Constructor
-     * @param hour
-     * @param minute
-     * @param isPM
+     * Constructor for TIime
+     * @param hour: int of the hour, between 1 and 12
+     * @param minute: int of the minute, between 0 and 59
+     * @param isPM: boolean for time of day, true = AM, false = PM
+     * @throws IllegalArgumentException for invalid hour, minute, isPM values
      */
     public Time(int hour, int minute, boolean isPM){
         if( hour < 1 || hour > 12 )
@@ -27,9 +34,10 @@ public class Time implements Cloneable , Comparable<Time> {
     }
 
     /**
-     * checkFormat
+     * checkFormat checks the format of the given time String and
+     * returns true if it is PM otherwise return false
      * @param tStr
-     * @return
+     * @return true if @code{tStr} is PM, false otherwise
      */
     private static boolean checkFormat(String tStr){
         if(tStr.length() != 8)
@@ -48,9 +56,9 @@ public class Time implements Cloneable , Comparable<Time> {
     }
 
     /**
-     * fromString
-     * @param tStr
-     * @return
+     * fromString constructs Time object given @code{tStr}
+     * @param tStr String representation of Time
+     * @return Time instance represented by @code{tStr}
      */
     public static Time fromString(String tStr){
         try {
@@ -64,8 +72,8 @@ public class Time implements Cloneable , Comparable<Time> {
     }
 
     /**
-     * clone method
-     * @return a new Time object cloned from this object which is independent
+     * Clones the Time object
+     * @return a new Time object cloned from this object which is independent (deep copy)
      */
     @Override
     public Time clone() {
@@ -78,8 +86,8 @@ public class Time implements Cloneable , Comparable<Time> {
 
     /**
      * equals
-     * @param obj
-     * @return
+     * @param obj the instance to compare against this (current instance)
+     * @return true if @code{obj} is equal to this(current instance)
      */
     @Override
     public boolean equals(Object obj) {
@@ -97,7 +105,7 @@ public class Time implements Cloneable , Comparable<Time> {
      */
     @Override
     public int hashCode() {
-        return 65531 * new Boolean(isPM).hashCode()
+        return 65531 * (isPM ? 0 : 1)
                 + 67 * hour + minute;
     }
 
@@ -135,8 +143,8 @@ public class Time implements Cloneable , Comparable<Time> {
     }
 
     /**
-     *
-     * @param minutesToAdd
+     * advances the time of current instance by @code{minutesToAdd} minutes
+     * @param minutesToAdd number of minutes to advance the current time
      */
     public void shift(int minutesToAdd){
         if(minutesToAdd < 0)
